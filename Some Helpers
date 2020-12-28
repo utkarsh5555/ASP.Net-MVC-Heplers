@@ -1,0 +1,13 @@
+        public static string MakeValidFileName(this string name)
+        {
+            var invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
+            var invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
+
+            return System.Text.RegularExpressions.Regex.Replace(name, invalidRegStr, "_");
+        }
+        
+          public static string VersionNumber => new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).LastWriteTime.ToString("yyyyMMdd.HH");
+          
+          https://stackoverflow.com/questions/33436525/how-to-parse-excel-rows-back-to-types-using-epplus
+          
+          https://www.c-sharpcorner.com/article/how-to-create-multiple-languages-in-asp-net-mvc-4-5-framework/
