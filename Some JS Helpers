@@ -1,0 +1,208 @@
+function isNullOrWhiteSpaces(str) {
+    return str === null || str.match(/^ *$/) !== null;
+}
+function ConvertJsonDateString(jsonDate, addTime) {
+    var shortDate = null;
+    if (jsonDate) {
+        var regex = /-?\d+/;
+        var matches = regex.exec(jsonDate);
+        var dt = new Date(parseInt(matches[0]));
+        var month = dt.getMonth() + 1;
+        var monthString = month > 9 ? month : '0' + month;
+        var day = dt.getDate();
+        var dayString = day > 9 ? day : '0' + day;
+        var year = dt.getFullYear();
+        shortDate = dayString + '/' + monthString + '/' + year;
+        if (addTime) {
+            var hours = dt.getHours();
+            var minutes = dt.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            //hours = hours % 12;
+            //hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            //shortDate = shortDate + " " + hours + ":" + minutes + " " + ampm;
+            shortDate = shortDate + " " + hours + ":" + minutes;
+        }
+    }
+    return shortDate;
+};
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        $(window).on('load', function () { hidePreLoad(); });
+        $(document).ajaxStart(function () { showPreLoad(); });
+
+        $(document).ajaxStop(function () {
+            hidePreLoad();
+        });
+
+$(document).ready(function () {
+    $.ajaxSetup({
+        statusCode: {
+            401: function () {
+                location.reload();
+            },
+            403: function () {
+                location.reload();
+            }
+        }
+    });
+});
+
+
+
+//function LoadEditor(selector, id, list) {
+//    function image_upload_handler(blobInfo, success, failure, progress) {
+//        var xhr, formData;
+
+//        xhr = new XMLHttpRequest();
+//        xhr.withCredentials = false;
+//        xhr.open('POST', '/Page/Upload');
+
+//        xhr.upload.onprogress = function (e) {
+//            progress(e.loaded / e.total * 100);
+//        };
+
+//        xhr.onload = function () {
+//            var json;
+
+//            if (xhr.status === 403) {
+//                failure('HTTP Error: ' + xhr.status, { remove: true });
+//                return;
+//            }
+
+//            if (xhr.status < 200 || xhr.status >= 300) {
+//                failure('HTTP Error: ' + xhr.status);
+//                return;
+//            }
+
+//            json = JSON.parse(xhr.responseText);
+
+//            if (!json || typeof json.location != 'string') {
+//                failure('Invalid JSON: ' + xhr.responseText);
+//                return;
+//            }
+
+//            success(json.location);
+//        };
+
+//        xhr.onerror = function () {
+//            failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+//        };
+
+//        formData = new FormData();
+//        formData.append('file', blobInfo.blob(), blobInfo.filename());
+//        formData.append('id', id);
+//        xhr.send(formData);
+//    };
+//    tinymce.remove();
+//    tinymce.init({
+//        selector: selector,
+//        height: 200,
+//        menubar: false,
+//        resize: false,
+//        branding: false,
+//        content_css: ['/assets/plugins/custom/tinymce/skins/ui/oxide/content.css', '/assets/plugins/custom/tinymce/skins/content/default/content.css'],
+//        content_style: "@import url('https://fonts.googleapis.com/css2?family=Lato:wght@900&family=Roboto&display=swap');",
+//        skin_url: '/assets/plugins/custom/tinymce/skins/ui/oxide',
+//        font_formats: "Arial Black=arial black,avant garde; Courier New=courier new,courier; Lato Black=lato; Roboto=roboto;",
+//        toolbar: [' styleselect fontselect fontsizeselect',
+//            'undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify',
+//            'bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code | Tags'],
+//        plugins: 'advlist autolink link image lists charmap print preview code', 
+//        image_advtab: true,
+//        image_title: true,
+//        automatic_uploads: true,
+//        images_upload_handler: image_upload_handler,
+//        file_picker_types: 'image',
+//        image_list: list,
+//        file_picker_callback: function (cb, value, meta) {
+//            var input = document.createElement('input');
+//            input.setAttribute('type', 'file');
+//            input.setAttribute('accept', 'image/*');
+//            input.onchange = function () {
+//                var file = this.files[0];
+
+//                var reader = new FileReader();
+//                reader.onload = function () {
+//                    var id = 'blobid' + (new Date()).getTime();
+//                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+//                    var base64 = reader.result.split(',')[1];
+//                    var blobInfo = blobCache.create(id, file, base64);
+//                    blobCache.add(blobInfo);
+//                    cb(blobInfo.blobUri(), { title: file.name });
+//                };
+//                reader.readAsDataURL(file);
+//            };
+//            input.click();
+//        },
+//        setup: function (editor) {
+
+//            /* example, adding a toolbar menu button */
+
+//            editor.ui.registry.addMenuButton('Tags', {
+//                text: 'Environment Variables',
+//                fetch: function (callback) {
+//                    var items = [
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Transaction Date',
+//                            onAction: function () {
+//                                editor.insertContent('#TransactionDate#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Current Date',
+//                            onAction: function () {
+//                                editor.insertContent('#CurrentDate#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Products',
+//                            onAction: function () {
+//                                editor.insertContent('#Products#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Detailed Products',
+//                            onAction: function () {
+//                                editor.insertContent('#DetailedProducts#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Payment API',
+//                            onAction: function () {
+//                                editor.insertContent('#API#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Total',
+//                            onAction: function () {
+//                                editor.insertContent('#Total#');
+//                            }
+//                        },
+//                        {
+//                            type: 'menuitem',
+//                            text: 'Payment QR',
+//                            onAction: function () {
+//                                editor.insertContent('#Payment_QR#');
+//                            }
+//                        },
+//                    ];
+//                    callback(items);
+//                }
+//            });
+//        }
+//    });
+//}
+//$(document).on('focusin', function (e) {
+//    if ($(e.target).closest(".tox-textarea").length) {
+//        e.stopImmediatePropagation();
+//    }
+//});
